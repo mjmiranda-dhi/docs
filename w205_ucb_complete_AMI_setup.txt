@@ -1,0 +1,166 @@
+1) In AWS console:
+Search for, and launch new UCB AMI instance (ucb_w205_complete)
+During startup:
+   - add an EBS volume, 50gb or higher (notice IOPS changes as you increase size)
+   - tag instance
+   - during security configuration, add custom TCP rules under Incoming:
+      - add Custom TCP ports: 50070, 4040, 8080
+      - SSH with port 22 should already be present
+      - Optionally add Custom TCP ports for: 8088, 8020 (need to check if this is necessary)
+
+2) Launch instance and log in
+
+3) Users w205 and hadoop and group hadoop have already been created with the AMI.
+
+4) Keys:
+- Keys have already been created, but if this is your first time, I'd overwrite them 
+as root:
+
+su - hadoop
+ssh-keygen -t rsa
+cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
+chmod 0600 ~/.ssh/authorized_keys
+
+
+5) We need to mount that EBS volume we created during instance creation
+a) Check volumes avaiable with the ls bulk command:
+as root:
+lsblk
+
+Your disks should be listed like below:
+NAME  MAJ:MIN RM SIZE RO TYPE MOUNTPOINT
+xvda1 202:1    0  10G  0 disk /
+xvdb  202:16   0  50G  0 disk
+
+Keep in mind, the disk names for your instance (here, xvda1 and xvdb) may have different volume names. 
+Notice the sizes. One should be the default disk when you create an instance, the second should be the larger EBS volume you specified.
+Some instances may have three disks. That's just how life goes.
+
+b) Check the file type of the volume. This will tell us if the disk has been formatted already.
+   Keep in mind your volume name may be different. In this example, my disk is called xvdb
+as root:
+file -s /dev/xvdb
+
+output should look like:
+/dev/xvdb data
+
+6. If in step 5 we find that the disk we want to mount is not formatted, we need to format it. 
+a) as root:
+mkfs -t ext4 /dev/volname
+
+b) Check filesystem of volume again for your own satisfaction:
+file -s /dev/xvdb
+
+Output should look something like the following:
+/dev/xvdb: Linux rev 1.0 ext4 filesystem data
+
+
+7. Check if the /data directory already exists (it should)
+as root:
+ls /data
+
+If it doesn't exist, you'll see an error. 
+
+
+8. With the new volume we formatted in step 6, we want to mount it to /data. This means when we write to /data, we're actually writing to this mounted disk, in this case, /dev/xvdb:
+as root:
+mount -t ext4 /dev/xvdb /data
+
+Now /dev/xvdb is mounted to /data
+
+9. Ideally, we want to save this AMI instance and EBS volume so we don't have to do all this setup again everytime we log into our environment. The following command will let our system know to mount the partitions we want (/data) when then instance is recreated/started. 
+a) Create a backup copy of /etc/fstab:
+as root:
+cp /etc/fstab /etc/fstab.orig
+
+If you want to double check, type: ls /etc/fstab.orig to make sure the backup exists
+
+b) As root, edit /etc/fstab using your favorite text editor:
+
+The file should look like the following. Again, your disk names may be different.
+
+LABEL=ROOT /         ext3    defaults        0 0
+none       /dev/pts  devpts  gid=5,mode=620  0 0
+none       /dev/shm  tmpfs   defaults        0 0
+none       /proc     proc    defaults        0 0
+none       /sys      sysfs   defaults        0 0
+
+Add the following line to the end of the file:
+/dev/xvdb  /data     ext4    defaults,nofail 0 2
+
+These are space delimited. This should all be the same information and disk names we used earlier in steps 5/6.
+Save the file and close it.
+
+
+The good stuff:
+
+10. Make sure namenode space is formatted:
+as root:
+sudo -u hdfs hdfs namenode -format
+
+If this is your first time running it, you'll likely get an error with a write permission to a directory /data/hadoop-dfs (or something of the sort).
+
+a) Add user hdfs of group hdfs as an owner of /dataL
+as root:
+chown hdfs:hdfs /data
+
+11) Rerun the namenode format command again
+as root:
+sudo -u hdfs hdfs namenode -format
+
+
+12) Start hadoop. A script should already be present in your /root directory.
+as root:
+./start-hadoop.sh
+
+13) Initialize Hadoop and HDFS:
+as root:
+/usr/lib/hadoop/libexec/init-hdfs.sh
+ 
+14) Create a w205 directory in the HDFS directory /user:
+as root:
+sudo -u hdfs hdfs dfs -mkdir /user/w205
+sudo -u hdfs hdfs dfs chown w205 /user/w205
+
+15) Create a w205 directory in /data:
+a) as root:
+mkdir /data/w205
+b) Make user w205 an owner of /data/w205:
+as root:
+chown w205:hadoop /data/w205
+
+15. User switch to user w205:
+su - w205
+
+16. As of 9/25, the spark install in the w205 directory (/home/w205/spark15) doesn't work for me, so I'm using /usr/lib/spark instead.
+as w205:
+a) Check your SPARK_HOME enviroment variable. This lets something running in your system know where spark's home is located:
+echo $SPARK_HOME
+
+Notice it's pointed to /home/w205/spark15
+
+b) Change this to point to /usr/lib/spark:
+export SPARK_HOME=/usr/lib/spark
+
+c) Double check SPARK_HOME by echoing it again. Notice the "$":
+echo $SPARK_HOME
+
+This should now be pointed to /usr/lib/spark.
+
+NOTE: This should ideally be changed in your .bash_profile or some other acceptable place so you don't have to keep setting this. If you exit out of w205 and switch back to w205 again, you should see SPARK_HOME reset back to the old value. Run through the same steps to change it back to the /usr/lib/spark setting.
+
+17) Start hive:
+as w205:
+hive
+
+18) You should save your AWS instance so you don't have to perform all the setup above the next time you stop/terminate your instance. This is essentially saving a "copy" if the UCB AMI and EBS volumes with all of your settings from above.
+
+a) In the AWS console, view your Instance:
+Right click on the instance you want to save: Image -> Create Image
+IMPORTANT: Let it finish saving before stopping or terminating the instance. If you're logged in, it should log you out.
+
+b) After you shut down and terminate, you can relaunch by looking at the left nav, under Images:
+AMIs, then in the main window, change the search selector to "Owned by me" and you should see your previously saved image.
+
+
+Then you can shutdown, terminate etc, and then restart
