@@ -45,9 +45,9 @@ file -s /dev/xvdb
 output should look like:
 /dev/xvdb data
 
-6. If in step 5 we find that the disk we want to mount is not formatted, we need to format it. 
+6) If in step 5 we find that the disk we want to mount is not formatted, we need to format it. 
 a) as root:
-mkfs -t ext4 /dev/volname
+mkfs -t ext4 /dev/xvdb
 
 b) Check filesystem of volume again for your own satisfaction:
 file -s /dev/xvdb
@@ -56,20 +56,21 @@ Output should look something like the following:
 /dev/xvdb: Linux rev 1.0 ext4 filesystem data
 
 
-7. Check if the /data directory already exists (it should)
+7) Check if the /data directory already exists (it should)
 as root:
 ls /data
 
 If it doesn't exist, you'll see an error. 
 
 
-8. With the new volume we formatted in step 6, we want to mount it to /data. This means when we write to /data, we're actually writing to this mounted disk, in this case, /dev/xvdb:
+8) With the new volume we formatted in step 6, we want to mount it to /data. This means when we write to /data, we're actually writing to this mounted disk, in this case, /dev/xvdb:
 as root:
 mount -t ext4 /dev/xvdb /data
 
 Now /dev/xvdb is mounted to /data
 
-9. Ideally, we want to save this AMI instance and EBS volume so we don't have to do all this setup again everytime we log into our environment. The following command will let our system know to mount the partitions we want (/data) when then instance is recreated/started. 
+
+9) Ideally, we want to save this AMI instance and EBS volume so we don't have to do all this setup again everytime we log into our environment. The following command will let our system know to mount the partitions we want (/data) when then instance is recreated/started. 
 a) Create a backup copy of /etc/fstab:
 as root:
 cp /etc/fstab /etc/fstab.orig
