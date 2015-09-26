@@ -1,5 +1,6 @@
 1) In AWS console:
-Search for, and launch new UCB AMI instance (ucb_w205_complete)
+Search for, and launch new UCB AMI instance (ucb_w205_complete) - With a medium instance (L/XL requires extra instructions I haven't tried yet).
+
 During startup:
    - add an EBS volume, 50gb or higher (notice IOPS changes as you increase size)
    - tag instance
