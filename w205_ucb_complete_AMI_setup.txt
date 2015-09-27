@@ -106,6 +106,10 @@ a) Add user hdfs of group hdfs as an owner of /data
 as root:
 chown hdfs:hdfs /data
 
+b) chmod /data to allow others write:
+chmod 777 /data
+* note, 777 is generally bad, will tighten this up soon
+
 11) Rerun the namenode format command again
 as root:
 sudo -u hdfs hdfs namenode -format
@@ -114,6 +118,14 @@ sudo -u hdfs hdfs namenode -format
 12) Start hadoop. A script should already be present in your /root directory.
 as root:
 ./start-hadoop.sh
+
+NOTE: optionally run this manually: had luck with this, so I'm not going to tempt fate and not use it:
+
+for x in `cd /etc/init.d ; ls hadoop-hdfs-*` ; do sudo service $x restart ; done
+
+service hadoop-yarn-resourcemanager start
+service hadoop-yarn-nodemanager start
+service hadoop-mapreduce-historyserver start
 
 
 13) Initialize Hadoop and HDFS:
@@ -134,6 +146,7 @@ mkdir /data/w205
 
 b) Make user w205 an owner of /data/w205:
 chown w205:hadoop /data/w205
+
 
 
 16) User switch to user w205:
