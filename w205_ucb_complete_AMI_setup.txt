@@ -13,8 +13,8 @@ During startup:
 
 3) Users w205 and hadoop and group hadoop have already been created with the AMI.
 
-4) Keys:
-- Keys have already been created, but if this is your first time, I'd overwrite them 
+4) Adding a new key is OPTIONAL. When launching from AWS, your public key will automatically get included, so you should ideally be fine.
+
 as root:
 
 su - hadoop
