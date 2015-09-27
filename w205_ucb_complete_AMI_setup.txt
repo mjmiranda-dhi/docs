@@ -127,6 +127,47 @@ service hadoop-yarn-resourcemanager start
 service hadoop-yarn-nodemanager start
 service hadoop-mapreduce-historyserver start
 
+12b) Check /etc/hadoop/conf/hdfs-site.xml. Make sure that we're writing to our /data directories. These are already set in the complete AMI, but here they are for reference:
+...
+  <property>
+     <name>hadoop.tmp.dir</name>
+     <value>/data/hadoop-hdfs/cache/${user.name}</value>
+  </property>
+  <property>
+     <name>dfs.namenode.name.dir</name>
+     <value>file:///data/hadoop-hdfs/cache/${user.name}/dfs/name</value>
+  </property>
+  <property>
+     <name>dfs.namenode.checkpoint.dir</name>
+     <value>file:///data/hadoop-hdfs/cache/${user.name}/dfs/namesecondary</value>
+  </property>
+  <property>
+     <name>dfs.datanode.data.dir</name>
+     <value>file:///data/hadoop-hdfs/cache/${user.name}/dfs/data</value>
+  </property>
+  ...
+  
+12c) Check /etc/hadoop/conf/yarn-site.xml. This makes sure we're pointed at the /data directory as above. These are already set in the complete AMI, but here they are for refernce:
+...
+  <property>
+    <description>List of directories to store localized files in.</description>
+    <name>yarn.nodemanager.local-dirs</name>
+    <value>/data/hadoop-yarn/cache/${user.name}/nm-local-dir</value>
+  </property>
+
+  <property>
+    <description>Where to store container logs.</description>
+    <name>yarn.nodemanager.log-dirs</name>
+    <value>/data/hadoop-yarn/containers</value>
+  </property>
+
+  <property>
+    <description>Where to aggregate logs to.</description>
+    <name>yarn.nodemanager.remote-app-log-dir</name>
+    <value>/data/hadoop-yarn/apps</value>
+  </property>
+...
+
 
 13) Initialize Hadoop and HDFS:
 as root:
@@ -136,7 +177,7 @@ as root:
 14) Create a w205 directory in the HDFS directory /user:
 as root:
 sudo -u hdfs hdfs dfs -mkdir /user/w205
-sudo -u hdfs hdfs dfs chown w205 /user/w205
+sudo -u hdfs hdfs dfs -chown w205 /user/w205
 
 
 15) Create a w205 directory in /data:
