@@ -13,6 +13,7 @@ During startup:
 
 3) Users w205 and hadoop and group hadoop have already been created with the AMI.
 
+[ STEP 4 can be skipped for now --
 4) Adding a new key is OPTIONAL. When launching from AWS, your public key will automatically get included, so you should ideally be fine.
 
 as root:
@@ -21,7 +22,7 @@ su - hadoop
 ssh-keygen -t rsa
 cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
 chmod 0600 ~/.ssh/authorized_keys
-
+]
 
 5) We need to mount that EBS volume we created during instance creation
 a) Check volumes avaiable with the ls bulk command:
