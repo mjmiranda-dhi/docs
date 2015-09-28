@@ -123,9 +123,6 @@ NOTE: optionally run this manually: had luck with this, so I'm not going to temp
 
 for x in `cd /etc/init.d ; ls hadoop-hdfs-*` ; do sudo service $x restart ; done
 
-service hadoop-yarn-resourcemanager start
-service hadoop-yarn-nodemanager start
-service hadoop-mapreduce-historyserver start
 
 12b) Check /etc/hadoop/conf/hdfs-site.xml. Make sure that we're writing to our /data directories. These are already set in the complete AMI, but here they are for reference:
 ...
@@ -172,6 +169,10 @@ service hadoop-mapreduce-historyserver start
 13) Initialize Hadoop and HDFS:
 as root:
 /usr/lib/hadoop/libexec/init-hdfs.sh
+ 
+service hadoop-yarn-resourcemanager start
+service hadoop-yarn-nodemanager start
+service hadoop-mapreduce-historyserver start
  
 
 14) Create a w205 directory in the HDFS directory /user:
