@@ -1,0 +1,187 @@
+Basics of the vi/vim editor 
+A REALLY basic list of vi/vim commands.
+
+History
+vi: from the word "visual"
+vim: vi "improved"
+https://en.wikipedia.org/wiki/Vi
+
+It's a text editor (think: on WinX systems: Notepad, Textpadd, even Word, in some sense). Other possible editors on *nix type systems are emacs, pico. The general appeal is it's easier to quickly edit files without having to lift your fingers off the keyboard. 
+
+vim is vi improved, but the basic commands should still be the same. Most systems will have either or both installed. From this point forward, I'll refer to it as just "vi", but know it could mean either vi or vim, depending on what's installed on your system.
+
+
+Essentials:
+1) Is vi or vim installed?
+In Linux or Unix, type the following command:
+
+which vi
+
+or
+
+which vim
+
+This tells you that it's installed or not (most systems have it, but some systems may have it disabled.  If you get a "not found" message, you're out of luck, and it isn't installed.
+
+
+
+
+2) Opening and closing a file
+==============
+OPENING A FILE
+==============
+To open a file in vi (for example, a file called "homework.txt" that exists in the current directory you're in):
+
+vi filename
+ex: vi homework.txt
+
+You can also open a new file by just typing vi alone:
+vi
+(Warning: if you try to save a file without a filename, you'll get an error. Even if you don't think you'll save the file, use vi filename anyway)
+
+
+NOTE: To run the below commands, you need to be in COMMAND mode (hit the ESC key). See #3 below.
+
+==============================
+EXITING A FILE, WITHOUT SAVING
+==============================
+To exit the file:
+
+:q
+
+NOTE: hitting the ESC key before you quit the file is just habit for me. If you're already out of edit mode, you can just type the quit command :q
+
+:q
+
+quits the file and discards ALL or ANY of the changes you may have made. Use this command if you want to discard changes (and you havent saved them)
+
+=======================================
+EXITING A FILE, AND SAVING YOUR CHANGES
+=======================================
+Write, then quit:
+
+:wq
+
+===============================================
+WRITING OR EXITING AND IGNORING ERRORS (beware)
+===============================================
+Quit, and ignore all error messages:
+:q!
+
+Write and Quit, and ignore all error messages
+:wq!
+
+=======================
+WRITE, BUT STAY IN FILE
+=======================
+vi isn't a fancy editor, so SAVE OFTEN. 
+Write (save) your changes:
+
+:w
+
+
+
+3) Modes (while inside the vi editor)
+
+There's two basic modes:
+COMMAND mode
+INSERT mode
+
+Command mode allows you to navigate and do other things in the file without being able to edit it. When you open a file in vi, you'll always start off in Command mode.
+
+
+INSERT mode is an edit mode. To go to insert mode, type:
+i
+
+To change to COMMAND mode:
+ESC    (ESC key)
+
+
+
+4) Navigation
+
+In the vi editor, in COMMAND mode, you can navigate the file by using the "h", "j", "k", and "l" (lower case L) keys.
+h is move left one space
+j is move down one line
+k is move up one line
+l is move right one space
+
+In most cases, you can use the arrow keys, but be warned, the arrow keys don't work all the time.
+
+
+
+5) Editing text
+Navigate to where you want to start inserting or modifying text, then switch to INSERT mode: 
+i
+
+Start typing. When you're done, go back to COMMAND mode with ESC.
+
+To delete a character, move the cursor to that character and in COMMAND mode, hit:
+x
+
+To undo your most previous change, in COMMAND mode, hit:
+u
+(You can keep hitting u until and you will keep undoing all the changes done while in the previous INSERT mode)
+
+To delete a line, navigate to that line, in COMMAND mode: 
+dd
+
+
+
+
+
+
+
+
+*****************************************************************************************************************************
+That's it. You should be able to get around with just the above basic commands. There/s plenty of resources out there for other vi commands, but you can get away with the above.
+*****************************************************************************************************************************
+
+
+
+6.) For slightly fancier commands (again, these are all in COMMAND mode (hit ESC)):
+
+To go to the beginning of the file (first line):
+H   (SHIFT-H)
+
+To go to the end of the file (last line):
+G   (SHIFT-G)
+
+To go to a particular line number:
+:linenumber
+(example: :5 goes to line 5)
+
+Go to the beginning of the current line:
+0     (zero)
+
+Go to the end of a line:
+$
+
+Move right one word at a time:
+w
+
+Move left one word at a time:
+b
+
+Insert a line below the current line:
+o
+(this inserts a line below your current line, and puts you in INSERT mode)
+
+Insert a line above the current line
+O
+(SHIFT-O, again, this puts you in INSERT mode)
+
+Insert after the current letter you're on:
+a
+(this will put you in INSERT mode and move the cursor one character to the right, it will not insert a space)
+
+To delete a word, navigate to the start of that word:
+dw
+
+
+
+
+
+
+
+
