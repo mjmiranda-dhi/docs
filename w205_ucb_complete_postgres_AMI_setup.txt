@@ -34,6 +34,12 @@ echo $PATH
 export PATH=/home/w205/spark15/bin:$PATH
 
 - What this does is pre-prends "/home/w205/spark15/bin" to my already existing $PATH. NOW: Does this screw up other things? I haven't tested that far. Anytime you change the order of the path, it's possible to get errors if you have the same libraries or binaries in two different places.
+- There is also potential arguable issues you can run into by putting your spark15/bin directory in front of your /usr/sbin or /usr/local/sbin directories (lets say if you have two applications called spark-sql that do two completely different things). You can optionally completely rewrite the PATH to put /home/w205/spark15/bin prior to /usr/lib/spark/bin or even remove /usr/lib/spark/bin altogether. For the purposes of this setup, I'm assuming I can live with /home/w205/spark15/bin in front of my other bin locations.
+
+echo $PATH
+
+- Output should look something similar to:
+PATH=/home/w205/spark15/bin:/usr/local/bin:/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/sbin:/opt/jdk1.7.0_79/bin:/usr/lib/spark/bin:/usr/lib/hadoop/bin:/home/w205/bin
 
 6) Run spark-sql
 - Long startup.. 
