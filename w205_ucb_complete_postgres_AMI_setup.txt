@@ -1,0 +1,44 @@
+Reference w205_ucb_complete_AMI.txt for setup of a brand new instance; All of the previous directions still apply.
+
+One of the issues I ran into was getting Spark SQL to run properly on the AMI (ucb_complete_postgres). I didn't try on the other AMI, but will try when I find time.
+
+On the new ucb_complete_postgres AMI instance:
+
+1) As root, start hadoop (via start-hadoop.sh or manual startup sequence)
+
+2) User switch to w205:
+su - w205
+
+2) Current install should have spark-1.5.0-hadoop-2.6 installed in /home/w205/spark15
+    - You can optionally update to the latest 1.5.1 but ideally, 1.5.0 should work.
+
+3) View your environment variables:
+env
+
+- This tells you everything you've got set in your environement as user w205.
+- SPARK_HOME should be set to /home/w205/spark15. This tells you when any application checks the environment to look for where Spark "lives", it will look for SPARK_HOME to figure that out. 
+- In the previous document (ucb_complete_AMI), we reset SPARK_HOME to /usr/lib/spark. I haven't tried using /usr/lib/spark for running Spark SQL. You're welcome to try.
+
+4) Check to make sure SPARK_HOME is pointed to /home/w205/spark15
+echo $SPARK_HOME
+
+5) When I first ran spark-sql, I got a stacktrace with the following error:
+java.lang.ClassNotFoundException: org.apache.spark.sql.hive.thriftserver.SparkSQLCLIDriver
+
+- My guess is when spark-sql tried to run, it's looking in the wrong directories.
+- Check the PATH variable:
+echo $PATH
+
+- Notice that /home/w205/spark15/bin isn't in there? I tried to add it:
+
+export PATH=/home/w205/spark15/bin:$PATH
+
+- What this does is pre-prends "/home/w205/spark15/bin" to my already existing $PATH. NOW: Does this screw up other things? I haven't tested that far. Anytime you change the order of the path, it's possible to get errors if you have the same libraries or binaries in two different places.
+
+6) Run spark-sql
+- Long startup.. 
+
+7) In spark-sql, type 
+show tables;
+
+- You should be able to see tables and create tables.
