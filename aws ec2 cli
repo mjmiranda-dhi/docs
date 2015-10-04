@@ -1,0 +1,70 @@
+aws ec2 describe-instances
+
+# volumes
+aws ec2 detach-volume --volume-id vol-606f548d
+
+
+# terminate
+aws ec2 terminate-instances --instance-ids i-e1c5fd42
+aws ec2 describe-instance-status --instance-id i-e1c5fd42
+
+# delete volumes
+ec2-delete-volume vol-xxxxx
+
+# launch (availability-zone = us-east-1b, securitygroup = ucb_205_security_group)
+aws ec2 run-instances --image-id ami-1785fe72 --key ucb --instance-type m3.large --security-group-ids sg-a5e90ec3 --subnet subnet-bcf5bd97
+
+# associate elastic ip (make sure to get the right id from above command output)
+aws ec2 associate-address --instance-id i-3cc0299e --public-ip 52.2.158.11
+
+# attach volume (may need to detach automatically attached volume)
+aws ec2 describe-volumes
+
+# detach the one that is /dev/sdf
+# aws ec2 detach-volume --volume-id vol-056c89e9
+
+# (make sure to get the right id from above command output)
+aws ec2 attach-volume --volume-id vol-606f548d --instance-id i-3cc0299e --device /dev/sdf
+
+______________
+
+ssh -i "ucb.pem" root@52.2.158.11
+
+mount /dev/xvdf /data
+
+# commented steps were already performed
+# /usr/lib/hadoop/libexec/init-hdfs.sh
+# sudo -u hdfs hdfs dfs -mkdir /user/ucb
+# sudo -u hdfs hdfs dfs -chown ucb /user/ucb
+
+bash start-hadoop.sh
+
+(it's in here: /root/start-hadoop.sh)
+
+su ucb
+hive
+
+pyspark
+
+
+
+
+----------
+on logout:
+
+(~/.bash_logout) this BS doesn't work	
+
+cd $HOME
+bash stop-hadoop.sh
+umount /data
+
+df -h
+exit
+
+aws ec2 describe-volumes
+# detach the one that is /dev/sdf
+aws ec2 detach-volume --volume-id vol-606f548d
+
+aws ec2 describe-instances
+INSTANCE_ID="$(aws ec2 describe-addresses --public-ips 52.2.158.11 --query 'Addresses[*][InstanceId]' --output text)"
+aws ec2 terminate-instances --instance-ids $INSTANCE_ID
