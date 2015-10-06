@@ -14,7 +14,7 @@ if [[ "$answer" == "y" ]]; then
 else
 	echo 'go umount yo /data dawg!'
 	ssh -i "ucb.pem" root@52.2.158.11
-	exit 1
+	return 1
 fi
 
 
