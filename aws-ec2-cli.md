@@ -37,11 +37,11 @@ ______________
 
 __to avoid spark path shenannigans, su <user> first__   
 
-`su ucb`
-`hive`
+`su ucb`   
+`hive`   
 
-`exit;`
-`pyspark`
+`exit;`   
+`pyspark`   
 
 
 
