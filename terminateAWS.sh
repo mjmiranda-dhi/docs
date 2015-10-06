@@ -1,5 +1,5 @@
 #!/bin/bash
-
+# VERY IMPORTANT: UNOUNT YOUR /DATA BEFORE DETACHING VOLUME!!!
 
 aws ec2 detach-volume --volume-id vol-606f548d
 
