@@ -1,7 +1,15 @@
 #!/bin/bash
 
+echo -n "YO DAWG!! did you umount your /data [y/n]: "
+read answer
 
-aws ec2 detach-volume --volume-id vol-606f548d
+if [[ "$answer" == "y" ]]; then
+	aws ec2 detach-volume --volume-id vol-606f548d
 
-INSTANCE_ID="$(aws ec2 describe-addresses --public-ips 52.2.158.11 --query 'Addresses[*][InstanceId]' --output text)"
-aws ec2 terminate-instances --instance-ids $INSTANCE_ID
+	INSTANCE_ID="$(aws ec2 describe-addresses --public-ips 52.2.158.11 --query 'Addresses[*][InstanceId]' --output text)"
+	aws ec2 terminate-instances --instance-ids $INSTANCE_ID
+else
+	echo 'go umount yo /data dawg!'
+	ssh -i "ucb.pem" root@52.2.158.11
+fi
+
