@@ -55,7 +55,7 @@ umount /data
 ```
 __sanity check to make sure your volumen was unmounted:__   
 `df -h`   
-__you should __not__ see your volume anymore   
+*you should __not__ see your volume anymore*   
 `exit`
 
 __detach your volume__   
