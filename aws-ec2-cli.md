@@ -44,7 +44,11 @@ __to avoid spark path shenannigans, su <user> first__
 `pyspark`   
 
 
+__zeppelin:__   
+`cd /data/zeppelin`   
+`bin/zeppelin.sh`   
 
+`http://ec2-52-2-158-11.compute-1.amazonaws.com:8080`
 
 ----------
 on logout:

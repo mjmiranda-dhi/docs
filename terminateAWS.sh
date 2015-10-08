@@ -16,7 +16,3 @@ else
 	ssh -i "ucb.pem" root@52.2.158.11
 	return 1
 fi
-
-
-INSTANCE_ID="$(aws ec2 describe-addresses --public-ips 52.2.158.11 --query 'Addresses[*][InstanceId]' --output text)"
-aws ec2 terminate-instances --instance-ids $INSTANCE_ID
